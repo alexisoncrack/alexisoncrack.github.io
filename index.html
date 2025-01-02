@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alexisoncrack</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffe4e1; /* Light pink background */
+      overflow: hidden;
+      font-family: monospace;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .center-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 20px;
+      background-color: rgba(255, 228, 225, 0.9); /* Slightly transparent background */
+      border: 2px solid #ff69b4; /* Darker pink outline */
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0; /* Initially hidden */
+      transition: opacity 2s ease-in; /* Smooth fade-in */
+      text-align: center;
+      color: #ff69b4;
+    }
+
+    .center-box img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .center-box h1 {
+      font-size: 24px;
+      margin: 10px 0;
+      color: #ff69b4;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      border-right: 2px solid #ff69b4; /* Cursor effect */
+    }
+
+    .center-box p {
+      font-size: 16px;
+      color: rgba(255, 105, 180, 0.6); /* Lighter pink for text */
+    }
+
+    .age-number {
+      color: #ff69b4; /* Darker pink for the age number */
+      font-weight: bold;
+    }
+
+    .username {
+      font-weight: bold;
+      color: #ff69b4;
+    }
+
+    .button-container {
+      position: absolute;
+      top: 70%; /* Position the buttons below the center box */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .button-container a {
+      display: inline-block;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 14px;
+      color: #ff69b4;
+      background-color: rgba(255, 228, 225, 1); /* Light pink background */
+      border: 2px solid #ff69b4; /* Darker pink border */
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: opacity 1s ease-in-out, transform 0.3s ease;
+      opacity: 0; /* Initially hidden */
+      width: 80px; /* Fixed width for consistent sizing */
+    }
+
+    .button-container a:hover {
+      background-color: #ff69b4;
+      color: #ffe4e1;
+      transform: scale(1.1); /* Slight zoom on hover */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div class="center-box" id="centerBox">
+    <img src="https://cdn.discordapp.com/avatars/536221521841225744/a_c0e4eda68ab31180c99d248a2bc0f5ee?size=1024" alt="pfpImage">
+    <h1 id="headerText"></h1>
+    <p id="ageText">
+      Hai! I'm <span class="username">alexisoncrack</span>, a 
+      <span class="age-number">calculating...</span> year old developer. Currently working on Minecraft mods, data packs, and web development quests. Want a site like this or a stupid mod/datapack? Contact me below.
+    </p>
+  </div>
+
+  <div class="button-container" id="buttonContainer">
+  <a href="https://discord.gg/cRr8pHrv" target="_blank" id="button1">Discord</a>
+  <a href="https:twitch.tv/alexisoncrack" target="_blank" id="button2">Twitch</a>
+  <a href="https://github.com/alexisoncrack" target="_blank" id="button3">GitHub</a>
+  <a href="https://www.tiktok.com/@awexisoncwack" target="_blank" id="button4">TikTok</a>
+  <a href="https://x.com/AwexisOnCwack" target="_blank" id="button5">Twitter</a>
+  </div>
+
+
+  <script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 20;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    const drops = Array(columns).fill().map(() => Math.random() * -100);
+
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩあいうえおかきくけこさしすせそたちつてとなにぬねの";
+
+    let introComplete = false;
+
+    function calculateDecimalAge() {
+      const birthDate = new Date(2007, 10, 30); // November 30, 2007
+      const now = new Date();
+      const ageInMilliseconds = now - birthDate;
+
+      const years = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25); // Total age in years
+      return years.toFixed(9); // 9 decimal places for frequent updates
+    }
+
+    function updateAge() {
+      const ageText = document.querySelector(".age-number");
+      ageText.textContent = calculateDecimalAge();
+    }
+
+    setInterval(updateAge, 100); // Update age every 100 milliseconds
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(255, 228, 225, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ff69b4";
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height) {
+          drops[i] = Math.random() * -50;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    function drawIntro() {
+      ctx.fillStyle = "rgba(255, 228, 225, 0.8)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ff69b4";
+      ctx.font = `${fontSize}px monospace`;
+
+      const username = "alexisoncrack";
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      const spacing = fontSize * 1.5;
+      const startX = centerX - (username.length / 2) * spacing;
+
+      username.split("").forEach((char, index) => {
+        const x = startX + index * spacing;
+        const y = centerY + Math.sin(index + Date.now() / 500) * 20;
+
+        ctx.fillText(char, x, y);
+      });
+    }
+
+    function animationLoop() {
+      if (!introComplete) {
+        drawIntro();
+      } else {
+        drawMatrix();
+      }
+    }
+
+    function typeHeaderText() {
+      const header = document.getElementById("headerText");
+      const text = "alexisoncrack";
+      let index = 0;
+
+      function type() {
+        if (index < text.length) {
+          header.textContent += text.charAt(index);
+          index++;
+          setTimeout(type, 100);
+        } else {
+          header.style.borderRight = "none";
+        }
+      }
+
+      type();
+    }
+
+    function fadeInButtons() {
+      const buttons = document.querySelectorAll(".button-container a");
+      buttons.forEach((button, index) => {
+        setTimeout(() => {
+          button.style.opacity = "1";
+        }, index * 500); // Staggered fade-in for each button
+      });
+    }
+
+    function showCenterBox() {
+      const centerBox = document.getElementById("centerBox");
+      centerBox.style.opacity = "1";
+      typeHeaderText();
+      setTimeout(fadeInButtons, 3000); // Start fading in buttons after 3 seconds
+    }
+
+    setTimeout(() => {
+      introComplete = true;
+      showCenterBox();
+    }, 5000);
+
+    setInterval(animationLoop, 50);
+  </script>
+</body>
+</html>
