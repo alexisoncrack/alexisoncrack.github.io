@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #ffe4e1; /* Light pink background */
+      background-color: #ffe4e1;
       overflow: hidden;
       font-family: monospace;
     }
@@ -27,12 +27,12 @@
       transform: translate(-50%, -50%);
       width: 300px;
       padding: 20px;
-      background-color: rgba(255, 228, 225, 0.9); /* Slightly transparent background */
-      border: 2px solid #ff69b4; /* Darker pink outline */
+      background-color: rgba(255, 228, 225, 0.9);
+      border: 2px solid #ff69b4;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      opacity: 0; /* Initially hidden */
-      transition: opacity 2s ease-in; /* Smooth fade-in */
+      opacity: 0;
+      transition: opacity 2s ease-in;
       text-align: center;
       color: #ff69b4;
     }
@@ -51,16 +51,28 @@
       overflow: hidden;
       white-space: nowrap;
       display: inline-block;
-      border-right: 2px solid #ff69b4; /* Cursor effect */
+      border-right: 2px solid #ff69b4;
+      animation: blink 1s step-end infinite;
     }
 
     .center-box p {
       font-size: 16px;
-      color: rgba(255, 105, 180, 0.6); /* Lighter pink for text */
+      color: rgba(255, 105, 180, 0.6);
+    }
+
+    .stuff {
+      font-weight: bold;
+      color: #ff69b4;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .stuff:hover {
+      color: #ff69b4;
     }
 
     .age-number {
-      color: #ff69b4; /* Darker pink for the age number */
+      color: #ff69b4;
       font-weight: bold;
     }
 
@@ -71,7 +83,7 @@
 
     .button-container {
       position: absolute;
-      top: 70%; /* Position the buttons below the center box */
+      top: 70%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -86,19 +98,39 @@
       text-decoration: none;
       font-size: 14px;
       color: #ff69b4;
-      background-color: rgba(255, 228, 225, 1); /* Light pink background */
-      border: 2px solid #ff69b4; /* Darker pink border */
+      background-color: rgba(255, 228, 225, 1);
+      border: 2px solid #ff69b4;
       border-radius: 5px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: opacity 1s ease-in-out, transform 0.3s ease;
-      opacity: 0; /* Initially hidden */
-      width: 80px; /* Fixed width for consistent sizing */
+      opacity: 0;
+      width: 80px;
     }
 
     .button-container a:hover {
       background-color: #ff69b4;
       color: #ffe4e1;
-      transform: scale(1.1); /* Slight zoom on hover */
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .button-container a {
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent;
+      }
     }
   </style>
 </head>
@@ -107,20 +139,19 @@
   <div class="center-box" id="centerBox">
     <img src="https://cdn.discordapp.com/avatars/536221521841225744/a_c0e4eda68ab31180c99d248a2bc0f5ee?size=1024" alt="pfpImage">
     <h1 id="headerText"></h1>
-    <p id="ageText">
+    <p id="descriptionText">
       Hai! I'm <span class="username">alexisoncrack</span>, a 
-      <span class="age-number">calculating...</span> year old developer. Currently working on Minecraft mods, data packs, and web development quests. Want a site like this or a stupid mod/datapack? Contact me below.
+      <span class="age-number">calculating...</span> year old developer. Currently working on <span class="stuff" id="stuffText">stuff</span>. Any of those sound cool? I'm accepting comissions! Contact me below.
     </p>
   </div>
 
   <div class="button-container" id="buttonContainer">
-  <a href="https://discord.gg/cRr8pHrv" target="_blank" id="button1">Discord</a>
-  <a href="https://twitch.tv/awexisoncwack" target="_blank" id="button2">Twitch</a>
-  <a href="https://github.com/alexisoncrack" target="_blank" id="button3">GitHub</a>
-  <a href="https://www.tiktok.com/@awexisoncwack" target="_blank" id="button4">TikTok</a>
-  <a href="https://x.com/AwexisOnCwack" target="_blank" id="button5">Twitter</a>
+    <a href="https://discord.gg/cRr8pHrv" target="_blank" id="button1">Discord</a>
+    <a href="https://twitch.tv/awexisoncwack" target="_blank" id="button2">Twitch</a>
+    <a href="https://github.com/alexisoncrack" target="_blank" id="button3">GitHub</a>
+    <a href="https://www.tiktok.com/@awexisoncwack" target="_blank" id="button4">TikTok</a>
+    <a href="https://x.com/AwexisOnCwack" target="_blank" id="button5">Twitter</a>
   </div>
-
 
   <script>
     const canvas = document.getElementById("matrix");
@@ -138,13 +169,24 @@
 
     let introComplete = false;
 
+    const stuffOptions = [
+      "Minecraft mods",
+      "data packs",
+      "web development",
+      "game development",
+      "playing valorant",
+      "building PCs",
+      "sprite art",
+      "cooking meth",
+    ];
+
     function calculateDecimalAge() {
-      const birthDate = new Date(2007, 10, 30); // November 30, 2007
+      const birthDate = new Date(2007, 10, 30);
       const now = new Date();
       const ageInMilliseconds = now - birthDate;
 
-      const years = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25); // Total age in years
-      return years.toFixed(9); // 9 decimal places for frequent updates
+      const years = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+      return years.toFixed(9);
     }
 
     function updateAge() {
@@ -152,7 +194,29 @@
       ageText.textContent = calculateDecimalAge();
     }
 
-    setInterval(updateAge, 100); // Update age every 100 milliseconds
+    function cycleStuff() {
+  const stuffText = document.getElementById("stuffText");
+  let index = 0;
+  let interval = null;
+
+  stuffText.addEventListener("mouseover", () => {
+    if (!interval) {
+      interval = setInterval(() => {
+        stuffText.textContent = stuffOptions[index];
+        index = (index + 1) % stuffOptions.length;
+      }, 500);
+    }
+  });
+
+  stuffText.addEventListener("mouseout", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  });
+}
+    setInterval(updateAge, 100);
+    cycleStuff();
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(255, 228, 225, 0.1)";
@@ -229,7 +293,7 @@
       buttons.forEach((button, index) => {
         setTimeout(() => {
           button.style.opacity = "1";
-        }, index * 500); // Staggered fade-in for each button
+        }, index * 500);
       });
     }
 
@@ -237,7 +301,7 @@
       const centerBox = document.getElementById("centerBox");
       centerBox.style.opacity = "1";
       typeHeaderText();
-      setTimeout(fadeInButtons, 3000); // Start fading in buttons after 3 seconds
+      setTimeout(fadeInButtons, 3000);
     }
 
     setTimeout(() => {
