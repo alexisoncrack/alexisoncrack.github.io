@@ -132,6 +132,27 @@
         border-color: transparent;
       }
     }
+    @keyframes bobbing {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.stuff {
+  font-weight: bold;
+  color: #ff69b4;
+  cursor: pointer;
+  animation: bobbing 1.5s infinite;
+  display: inline-block; /* Ensures the animation works on inline text */
+  transition: color 0.3s ease;
+}
+
+.stuff:hover {
+  color: #ff69b4;
+}
   </style>
 </head>
 <body>
@@ -140,9 +161,11 @@
     <img src="https://cdn.discordapp.com/avatars/536221521841225744/a_c0e4eda68ab31180c99d248a2bc0f5ee?size=1024" alt="pfpImage">
     <h1 id="headerText"></h1>
     <p id="descriptionText">
-      Hai! I'm <span class="username">alexisoncrack</span>, a 
-      <span class="age-number">calculating...</span> year old developer. Currently working on <span class="stuff" id="stuffText">stuff</span>. Any of those sound cool? I'm accepting comissions! Contact me below.
-    </p>
+  Hai! I'm <span class="username">alexisoncrack</span>, a 
+  <span class="age-number">calculating...</span> year old developer. Currently working on 
+  <span style="display: block; text-align: center;"><span class="stuff" id="stuffText">stuff</span></span>. 
+  Any of those sound cool? Contact me below.
+</p>
   </div>
 
   <div class="button-container" id="buttonContainer">
@@ -194,7 +217,7 @@
       ageText.textContent = calculateDecimalAge();
     }
 
-    function cycleStuff() {
+   function cycleStuff() {
   const stuffText = document.getElementById("stuffText");
   let index = 0;
   let interval = null;
@@ -203,6 +226,7 @@
     if (!interval) {
       interval = setInterval(() => {
         stuffText.textContent = stuffOptions[index];
+        stuffText.style.animation = "bobbing 1.5s infinite"; // Apply bobbing animation
         index = (index + 1) % stuffOptions.length;
       }, 500);
     }
@@ -215,6 +239,7 @@
     }
   });
 }
+
     setInterval(updateAge, 100);
     cycleStuff();
 
